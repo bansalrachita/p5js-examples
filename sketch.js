@@ -11,11 +11,20 @@ function setup() {
   // opacity ranges from 0 to 255. This might not be effective since
   // p5 renders continuously and opacity becomes 255 soon.
   background(30, 150, 225);
+
+  // `noLoop` stops draw function to loop again and runs it only once for the lifecycle of the program.
+  // noLoop();
+  // Customizes the frameRate of p5js i.e. controls how many times the draw function is called per second.
+  // frameRate(2);
 }
 
 function draw() {
   // console.log("run setup."); Runs continuosly. It has a framerate of 60.
-  shapes();
+  // shapes();
+  // paint();
+  // showFrameRate();
+  fillCircles();
+  // randomFunctions();
 }
 
 function callNativeCanvasProps() {
@@ -26,7 +35,7 @@ function callNativeCanvasProps() {
 }
 
 function shapes() {
-  drawDNDIcon();
+  // drawDNDIcon();
   // drawCircles();
   // drawRect();
   // drawEllipse();
@@ -82,15 +91,34 @@ function drawCircles() {
   fill(50, 200, 0);
   ellipse(400, 200, 150, 150);
 }
+
 let count = 0;
+let toggle = false;
 
 function drawDNDIcon() {
-  background(1, 186, 245);
+  // `mouseIsPressed` return true when mouse is clicked on canvas area else it returns false.
+  // This is not a good way to detect mouse clicks because of the high frameRate of p5js the detection can be glitchy.
+  // Instead use p5js evan function.
+  if (mouseIsPressed) {
+    toggle = !toggle;
+  }
+
+  if (toggle) {
+    background(1, 186, 245);
+  } else {
+    background(250, 118, 24);
+  }
+
+  frameRate(15);
   // p5.js variable that returns canvas width.
   let x = width / 2;
   // p5.js variable that returns canvas height.
   let y = height / 2;
   let size = 200 + count;
+
+  if (frameCount % 30 === 0) {
+    count = 0;
+  }
 
   noStroke();
   fill(255, 75, 85);
@@ -102,3 +130,81 @@ function drawDNDIcon() {
 
   count++;
 }
+
+function showFrameRate() {
+  background(220);
+  frameRate(6);
+  // Changes the size of the text.
+  textSize(36);
+  // Changes the font color.
+  fill(236, 34, 117);
+  textAlign(CENTER, CENTER);
+  const fr = parseInt(frameRate(), 10);
+
+  text("frameRate " + fr, width / 2, height / 2);
+  text("frameCount: " + frameCount, width / 2, height / 3);
+}
+
+function paint() {
+  // Move the background up to retain the previous image on the canvas.
+  // background(220);
+  let x = mouseX;
+  let y = mouseY;
+  let size = 30;
+
+  if (mouseIsPressed) {
+    noStroke();
+    fill(255, 18, 100, 100);
+    ellipse(x, y, size, size);
+  }
+}
+
+const fillCircles = () => {
+  background(30, 150, 240);
+  fill(255, 50, 150);
+  noStroke();
+
+  let diameter = 40;
+
+  // Nested structures can make the program really slow
+  // because they are run infinitely in p5js and should be used carefully.
+  for (let i = 0; i < width / diameter; ++i) {
+    for (let j = 0; j < height / diameter; ++j) {
+      let offset = diameter / 2;
+      let x = i * diameter + offset;
+      let y = j * diameter + offset;
+      // gives a sooth transition of randomly generated values i.e. with a more even distribution.
+      ellipse(
+        x,
+        y,
+        // `noise()` function returns semi-random value in between 0 and 1.
+        // So if we input gradually incrementing values to noise function,
+        // it will return only return incrementing semi-random value.
+        diameter * noise(frameCount / 100 + i + j),
+        diameter * noise(frameCount / 100 + i + j)
+      );
+    }
+  }
+};
+
+const randomFunctions = () => {
+  background(255, 0, 150);
+  frameRate(1);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(24);
+  // Returns a random decimal value > 0 and < 1.
+  const random_0 = random();
+  // Returns a random decimal value between 0 and 10.
+  const random_1 = random(10);
+  // Returns a random decimal value between 10 and 100.
+  const random_2 = random(10, 100);
+  const x = width / 2;
+  const y = height / 2;
+  const offset = 40;
+
+  text(random_0, x, y - offset);
+  text(random_1, x, y);
+  text(random_2, x, y + offset);
+};

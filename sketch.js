@@ -1,3 +1,6 @@
+let circle_1;
+let circle_2;
+
 function setup() {
   let canvas = createCanvas(800, 400);
   // sets canvas on root element in the DOM.
@@ -16,6 +19,12 @@ function setup() {
   // noLoop();
   // Customizes the frameRate of p5js i.e. controls how many times the draw function is called per second.
   // frameRate(2);
+
+  // circle_1 = new Circle(width, height);
+  // circle_2 = new Circle(width + 400, height);
+
+  // draws cicles of varied sizes by calling random function on an array of size =x where x is user input.
+  // circularOutlines();
 }
 
 function draw() {
@@ -23,9 +32,23 @@ function draw() {
   // shapes();
   // paint();
   // showFrameRate();
-  fillCircles();
+  // fillCircles();
   // randomFunctions();
+  // drawFromCircle();
+  // animateText();
+  drawCirclesOnKeyPress();
 }
+
+const drawFromCircle = () => {
+  fill(245, 30, 150);
+  noStroke();
+
+  circle_1.draw();
+  circle_1.grow();
+
+  circle_2.draw();
+  circle_2.grow();
+};
 
 function callNativeCanvasProps() {
   drawingContext.shadowOffsetX = 5;
@@ -73,64 +96,6 @@ function drawLine() {
   line(0, 0, 800, 300);
 }
 
-function drawCircles() {
-  // circle 1
-  stroke(75);
-  fill(50);
-  ellipse(400, 200, 300, 300);
-  // circle 2
-  stroke(0);
-  fill(200, 0, 100);
-  ellipse(400, 200, 275, 275);
-  // circle 3
-  stroke(100);
-  fill(0, 100, 150);
-  ellipse(400, 200, 250, 250);
-  // circle 4
-  stroke(100);
-  fill(50, 200, 0);
-  ellipse(400, 200, 150, 150);
-}
-
-let count = 0;
-let toggle = false;
-
-function drawDNDIcon() {
-  // `mouseIsPressed` return true when mouse is clicked on canvas area else it returns false.
-  // This is not a good way to detect mouse clicks because of the high frameRate of p5js the detection can be glitchy.
-  // Instead use p5js evan function.
-  if (mouseIsPressed) {
-    toggle = !toggle;
-  }
-
-  if (toggle) {
-    background(1, 186, 245);
-  } else {
-    background(250, 118, 24);
-  }
-
-  frameRate(15);
-  // p5.js variable that returns canvas width.
-  let x = width / 2;
-  // p5.js variable that returns canvas height.
-  let y = height / 2;
-  let size = 200 + count;
-
-  if (frameCount % 30 === 0) {
-    count = 0;
-  }
-
-  noStroke();
-  fill(255, 75, 85);
-  ellipse(x, y, size, size);
-
-  rectMode(CENTER);
-  fill(255);
-  rect(x, y, 0.75 * size, 0.15 * size);
-
-  count++;
-}
-
 function showFrameRate() {
   background(220);
   frameRate(6);
@@ -159,34 +124,6 @@ function paint() {
   }
 }
 
-const fillCircles = () => {
-  background(30, 150, 240);
-  fill(255, 50, 150);
-  noStroke();
-
-  let diameter = 40;
-
-  // Nested structures can make the program really slow
-  // because they are run infinitely in p5js and should be used carefully.
-  for (let i = 0; i < width / diameter; ++i) {
-    for (let j = 0; j < height / diameter; ++j) {
-      let offset = diameter / 2;
-      let x = i * diameter + offset;
-      let y = j * diameter + offset;
-      // gives a sooth transition of randomly generated values i.e. with a more even distribution.
-      ellipse(
-        x,
-        y,
-        // `noise()` function returns semi-random value in between 0 and 1.
-        // So if we input gradually incrementing values to noise function,
-        // it will return only return incrementing semi-random value.
-        diameter * noise(frameCount / 100 + i + j),
-        diameter * noise(frameCount / 100 + i + j)
-      );
-    }
-  }
-};
-
 const randomFunctions = () => {
   background(255, 0, 150);
   frameRate(1);
@@ -207,4 +144,10 @@ const randomFunctions = () => {
   text(random_0, x, y - offset);
   text(random_1, x, y);
   text(random_2, x, y + offset);
+};
+
+const circularOutlines = () => {
+  noFill();
+  strokeWeight(2);
+  circles(width / 2, height / 2, 100);
 };

@@ -52,6 +52,7 @@ const drawCirclesOnKeyPress = () => {
   if (pressed) {
     const randomIndex = parseInt(random(colors.length), 10);
     const randomSize = random(200);
+    // Takes in a color sequence of [r,b,g].
     fill(colors[randomIndex]);
     ellipse(random(width), random(height), randomSize, randomSize);
   }
@@ -59,6 +60,7 @@ const drawCirclesOnKeyPress = () => {
 };
 
 function keyPressed() {
+  // key is a special keyword provided by p5js that provides alphanumeric names of the keyboard keys.
   if (key === " ") {
     pressed = true;
   }

@@ -2,7 +2,7 @@ let circle_1;
 let circle_2;
 
 function setup() {
-  let canvas = createCanvas(800, 400);
+  let canvas = createCanvas(1440, 800);
   // sets canvas on root element in the DOM.
   canvas.parent("root");
   // Set color of the canvas. background(100, 100, 100);
@@ -37,7 +37,8 @@ function draw() {
   // drawFromCircle();
   // animateText();
   // drawCirclesOnKeyPress();
-  pushPop();
+  // pushPop();
+  game();
 }
 
 const drawFromCircle = () => {

@@ -1,36 +1,20 @@
-import http from "http";
-import path from "path";
-import fs from "fs";
+const express = require("express");
+const webpack = require("webpack");
+const webpackDevMiddleware = require("webpack-dev-middleware");
 
-const handleRequest = (request, response) => {
-  let pathname = request.url;
+const app = express();
+const config = require("./webpack.config.js");
+const compiler = webpack(config);
 
-  if (pathname === "/") {
-    pathname = "/index.html";
-  }
+// Tell express to use the webpack-dev-middleware and use the webpack.config.js
+// configuration file as a base.
+app.use(
+  webpackDevMiddleware(compiler, {
+    publicPath: config.output.publicPath
+  })
+);
 
-  const ext = path.extname(pathname);
-  const mapExtToType = {
-    ".html": "text/html",
-    ".js": "text/javascript",
-    ".css": "text/css"
-  };
-
-  const contentType = mapExtToType[ext] || "text/plain";
-
-  fs.readFile(path.resolve(path.dirname("")) + pathname, (error, data) => {
-    if (error) {
-      response.writeHead(500);
-      return response.end("cannot load " + pathname);
-    }
-
-    response.writeHead(200, {
-      "Content-Type": contentType
-    });
-    response.end(data);
-  });
-};
-
-let server = http.createServer(handleRequest);
-server.listen(8080);
-console.info("Server started at port 8080");
+// Serve the files on port 3000.
+app.listen(3000, function() {
+  console.log("Example app listening on port 3000!\n");
+});

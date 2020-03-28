@@ -3,16 +3,15 @@ const path = require("path");
 
 module.exports = {
   mode: "development",
-  // 1
   entry: "./src/sketch.js",
-  // 2
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist")
+    path: path.resolve(__dirname, "dist"),
+    publicPath: "/"
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: "p5-examples",
+      title: "Guess the number",
       template: "index.html",
       alwaysWriteToDisk: true
     })

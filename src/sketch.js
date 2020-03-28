@@ -1,11 +1,10 @@
 import "../styles.css";
 import game from "./game";
+import p5js from "p5";
 
-import p5 from "p5";
-
-const sketch = sk => {
-  sk.setup = () => {
-    let canvas = sk.createCanvas(1440, 800);
+const sketch = p5 => {
+  p5.setup = () => {
+    let canvas = p5.createCanvas(1440, 800);
     // sets canvas on root element in the DOM.
     canvas.parent("root");
     // Set color of the canvas. background(100, 100, 100);
@@ -16,7 +15,7 @@ const sketch = sk => {
     // background also has a 4th value called `alpha` which sets the opacity.
     // opacity ranges from 0 to 255. This might not be effective since
     // p5 renders continuously and opacity becomes 255 soon.
-    sk.background(30, 150, 225);
+    p5.background(30, 150, 225);
 
     // `noLoop` stops draw function to loop again and runs it only once for the lifecycle of the program.
     // noLoop();
@@ -30,9 +29,9 @@ const sketch = sk => {
     // circularOutlines();
   };
 
-  sk.draw = () => {
-    game(sk);
+  p5.draw = () => {
+    game(p5);
   };
 };
 
-const P5 = new p5(sketch);
+const P5 = new p5js(sketch);

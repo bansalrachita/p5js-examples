@@ -7,41 +7,37 @@ let gameLog = {
   level: 0
 };
 
-const game = (sketch, keyPressed) => {
-  const score = getGameScore(sketch, gameLog.results);
+const game = p5 => {
+  const score = getGameScore(p5, gameLog.results);
   const speed = gameLog.interval - 10 * gameLog.level;
   gameLog.gameIsOver = score.loss >= 3 || score.total === 50;
 
   if (gameLog.gameIsOver) {
-    displayGameOver(sketch, score);
+    displayGameOver(p5, score);
     return;
   }
 
-  increaseDifficultyMessage(sketch, score.win);
-  sketch.background(0);
+  increaseDifficultyMessage(p5, score.win);
+  p5.background(0);
 
-  if (sketch.frameCount === 1 || sketch.frameCount % speed === 0) {
+  if (p5.frameCount === 1 || p5.frameCount % speed === 0) {
     gameLog.solution = null;
     gameLog.guessItem = new GetItem(
-      sketch,
-      sketch.width / 2,
-      sketch.height / 2,
+      p5,
+      p5.width / 2,
+      p5.height / 2,
       speed / 10
     );
   }
 
   gameLog.guessItem && gameLog.guessItem.render();
-  solutionMessage(sketch, gameLog.solution, score.total * 1000);
+  solutionMessage(p5, gameLog.solution, score.total * 1000);
 
-  sketch.keyPressed = () => {
-    if (gameLog.gameIsOver && sketch.key === "Enter") {
+  p5.keyPressed = () => {
+    if (gameLog.gameIsOver && p5.key === "Enter") {
       restartTheGame();
-    } else if (
-      gameLog.guessItem &&
-      sketch.keyCode >= 48 &&
-      sketch.keyCode <= 58
-    ) {
-      gameLog.guessItem.solved(sketch.key);
+    } else if (gameLog.guessItem && p5.keyCode >= 48 && p5.keyCode <= 58) {
+      gameLog.guessItem.solved(p5.key);
       gameLog.solution = gameLog.guessItem.answer;
       gameLog.results.push(gameLog.solution);
       gameLog.guessItem = null;
@@ -67,37 +63,37 @@ const getGameScore = score => {
   return gameScore;
 };
 
-const displayGameOver = (sketch, score) => {
-  sketch.push();
-  sketch.background(255);
-  sketch.textAlign(sketch.CENTER, sketch.CENTER);
-  sketch.translate(sketch.width / 2, sketch.height / 2);
+const displayGameOver = (p5, score) => {
+  p5.push();
+  p5.background(255);
+  p5.textAlign(p5.CENTER, p5.CENTER);
+  p5.translate(p5.width / 2, p5.height / 2);
 
-  sketch.fill(234, 34, 180);
-  sketch.textSize(24);
-  sketch.text("Game over!", 0, 0);
+  p5.fill(234, 34, 180);
+  p5.textSize(24);
+  p5.text("Game over!", 0, 0);
 
-  sketch.fill(0);
-  sketch.textSize(24);
-  sketch.translate(0, 36);
-  sketch.text(`You finished at level ${gameLog.level}`, 0, 0);
-  sketch.text(`You have a score ${score.win - score.loss}`, 0, 40);
+  p5.fill(0);
+  p5.textSize(24);
+  p5.translate(0, 36);
+  p5.text(`You finished at level ${gameLog.level}`, 0, 0);
+  p5.text(`You have a score ${score.win - score.loss}`, 0, 40);
 
-  const alternatingFrameCount = sketch.map(
-    sketch.sin(sketch.frameCount / 10),
+  const alternatingFrameCount = p5.map(
+    p5.sin(p5.frameCount / 10),
     -1,
     1,
     0,
     255
   );
-  sketch.fill(234, 34, 180, alternatingFrameCount);
-  sketch.textSize(16);
-  sketch.translate(0, 100);
-  sketch.text("PRESS ENTER", 0, 0);
-  sketch.pop();
+  p5.fill(234, 34, 180, alternatingFrameCount);
+  p5.textSize(16);
+  p5.translate(0, 100);
+  p5.text("PRESS ENTER", 0, 0);
+  p5.pop();
 };
 
-const solutionMessage = (sketch, solution, seed) => {
+const solutionMessage = (p5, solution, seed) => {
   let TRUE_MESSAGES = [
     "Great job!",
     "Doing great!",
@@ -110,15 +106,15 @@ const solutionMessage = (sketch, solution, seed) => {
   if (solution !== null) {
     let messages = solution ? TRUE_MESSAGES : FALSE_MESSAGES;
 
-    sketch.push();
-    sketch.randomSeed(seed);
-    sketch.fill(200, 40, 90);
-    sketch.textSize(36);
-    sketch.textAlign(sketch.CENTER, sketch.CENTER);
-    sketch.translate(sketch.width / 2, sketch.height / 2);
-    sketch.text(messages[parseInt(sketch.random(messages.length), 10)], 0, 0);
-    sketch.randomSeed();
-    sketch.pop();
+    p5.push();
+    p5.randomSeed(seed);
+    p5.fill(200, 40, 90);
+    p5.textSize(36);
+    p5.textAlign(p5.CENTER, p5.CENTER);
+    p5.translate(p5.width / 2, p5.height / 2);
+    p5.text(messages[parseInt(p5.random(messages.length), 10)], 0, 0);
+    p5.randomSeed();
+    p5.pop();
   }
 };
 
@@ -133,9 +129,9 @@ const restartTheGame = () => {
   };
 };
 
-function GetItem(sketch, x, y, scl) {
+function GetItem(p5, x, y, scl) {
   const getContent = () => {
-    return String(parseInt(sketch.random(10), 10));
+    return String(parseInt(p5.random(10), 10));
   };
 
   this.x = x;
@@ -176,17 +172,17 @@ function GetItem(sketch, x, y, scl) {
   };
 
   this.drawEllipse = (size, strkWight, speedMultiplier, seed) => {
-    sketch.push();
-    sketch.randomSeed(seed);
-    sketch.noFill();
-    sketch.translate(this.x, this.y);
-    sketch.strokeWeight(strkWight * 0.5 * speedMultiplier);
-    sketch.scale(this.scale);
-    let color = parseInt(sketch.random(this.colors.length), 10);
-    sketch.stroke(this.colors[color]);
-    sketch.ellipse(0, 0, size, size);
-    sketch.randomSeed();
-    sketch.pop();
+    p5.push();
+    p5.randomSeed(seed);
+    p5.noFill();
+    p5.translate(this.x, this.y);
+    p5.strokeWeight(strkWight * 0.5 * speedMultiplier);
+    p5.scale(this.scale);
+    let color = parseInt(p5.random(this.colors.length), 10);
+    p5.stroke(this.colors[color]);
+    p5.ellipse(0, 0, size, size);
+    p5.randomSeed();
+    p5.pop();
   };
 
   this.render = () => {
@@ -195,30 +191,30 @@ function GetItem(sketch, x, y, scl) {
       this.drawEllipse(80, 7, 1.2, this.content * 3000);
       this.drawEllipse(65, 6, 1.1, this.content * 6000);
 
-      sketch.push();
-      sketch.fill(255, this.alpha);
-      sketch.textAlign(sketch.CENTER, sketch.CENTER);
-      sketch.translate(this.x, this.y);
-      sketch.scale(this.scale);
-      sketch.text(this.contentMap[this.content], 0, 0);
+      p5.push();
+      p5.fill(255, this.alpha);
+      p5.textAlign(p5.CENTER, p5.CENTER);
+      p5.translate(this.x, this.y);
+      p5.scale(this.scale);
+      p5.text(this.contentMap[this.content], 0, 0);
       this.scale += this.scaleIncrement;
       this.alpha -= this.alphaDecrement;
-      sketch.pop();
+      p5.pop();
     }
   };
 }
 
-const increaseDifficultyMessage = (sketch, wins) => {
+const increaseDifficultyMessage = (p5, wins) => {
   if (wins > 0 && wins % 5 === 0) {
     gameLog.level = wins / 5;
 
-    sketch.push();
-    sketch.fill(200, 40, 90);
-    sketch.textSize(36);
-    sketch.textAlign(sketch.CENTER, sketch.CENTER);
-    sketch.translate(sketch.width / 2, sketch.height / 2);
-    sketch.text(`Congratulation! You are at level ${gameLog.level}.`, 0, 0);
-    sketch.pop();
+    p5.push();
+    p5.fill(200, 40, 90);
+    p5.textSize(36);
+    p5.textAlign(p5.CENTER, p5.CENTER);
+    p5.translate(p5.width / 2, p5.height / 2);
+    p5.text(`Congratulation! You are at level ${gameLog.level}.`, 0, 0);
+    p5.pop();
   }
 };
 

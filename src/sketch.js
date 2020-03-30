@@ -1,10 +1,11 @@
 import "../styles.css";
 import game from "./game";
 import p5js from "p5";
+import { createClock } from "./clock";
 
 const sketch = p5 => {
   p5.setup = () => {
-    let canvas = p5.createCanvas(1440, 800);
+    let canvas = p5.createCanvas(1440, 770);
     // sets canvas on root element in the DOM.
     canvas.parent("root");
     // Set color of the canvas. background(100, 100, 100);
@@ -31,6 +32,7 @@ const sketch = p5 => {
 
   p5.draw = () => {
     game(p5);
+    // createClock(p5);
   };
 };
 

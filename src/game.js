@@ -1,7 +1,9 @@
+import { createClock } from "./clock";
+
 let gameLog = {
   guessItem: null,
   solution: null,
-  interval: 100,
+  interval: 250,
   results: [],
   gameIsOver: false,
   level: 0
@@ -26,7 +28,7 @@ const game = p5 => {
       p5,
       p5.width / 2,
       p5.height / 2,
-      speed / 10
+      speed / 25
     );
   }
 
@@ -156,11 +158,48 @@ function GetItem(p5, x, y, scl) {
     "TEN"
   ];
   this.colors = [
-    [255, 176, 105],
-    [232, 82, 183],
-    [143, 150, 255],
-    [118, 232, 199],
-    [221, 255, 130]
+    [
+      [255, 176, 105],
+      [232, 82, 183],
+      [143, 150, 255],
+      [118, 232, 199],
+      [221, 255, 130]
+    ],
+    [
+      [6, 112, 33],
+      [9, 184, 19],
+      [42, 227, 0],
+      [115, 250, 12],
+      [174, 255, 0]
+    ],
+    [
+      [204, 45, 191],
+      [176, 47, 214],
+      [121, 52, 191],
+      [85, 47, 214],
+      [45, 52, 204]
+    ],
+    [
+      [255, 193, 36],
+      [232, 155, 32],
+      [255, 149, 49],
+      [232, 100, 32],
+      [255, 78, 36]
+    ],
+    [
+      [217, 4, 22],
+      [242, 5, 159],
+      [3, 11, 166],
+      [3, 166, 166],
+      [242, 159, 5]
+    ],
+    [
+      [217, 4, 22],
+      [242, 5, 159],
+      [3, 11, 166],
+      [3, 166, 166],
+      [242, 159, 5]
+    ]
   ];
 
   this.solved = input => {
@@ -178,8 +217,8 @@ function GetItem(p5, x, y, scl) {
     p5.translate(this.x, this.y);
     p5.strokeWeight(strkWight * 0.5 * speedMultiplier);
     p5.scale(this.scale);
-    let color = parseInt(p5.random(this.colors.length), 10);
-    p5.stroke(this.colors[color]);
+    let color = parseInt(p5.random(this.colors[gameLog.level].length), 10);
+    p5.stroke(this.colors[gameLog.level][color]);
     p5.ellipse(0, 0, size, size);
     p5.randomSeed();
     p5.pop();
@@ -187,9 +226,16 @@ function GetItem(p5, x, y, scl) {
 
   this.render = () => {
     if (this.answer || this.answer === undefined) {
-      this.drawEllipse(100, 15, 1.4, this.content * 1000);
-      this.drawEllipse(80, 7, 1.2, this.content * 3000);
-      this.drawEllipse(65, 6, 1.1, this.content * 6000);
+      Array(10)
+        .fill(0, 0)
+        .forEach((value, index) => {
+          this.drawEllipse(
+            index ? (200 / index) * 2 : 200,
+            index ? 15 / index : 15,
+            index ? 1.4 / index : index,
+            this.content * 10000 * index * 3
+          );
+        });
 
       p5.push();
       p5.fill(255, this.alpha);
@@ -200,6 +246,7 @@ function GetItem(p5, x, y, scl) {
       this.scale += this.scaleIncrement;
       this.alpha -= this.alphaDecrement;
       p5.pop();
+      createClock(p5, this.scale);
     }
   };
 }

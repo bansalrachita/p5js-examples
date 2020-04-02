@@ -1,7 +1,6 @@
 import "../styles.css";
-import game from "./game";
 import p5js from "p5";
-import { createClock } from "./clock";
+import { game } from "./game/game";
 
 const sketch = p5 => {
   p5.setup = () => {
@@ -32,7 +31,7 @@ const sketch = p5 => {
 
   p5.draw = () => {
     game(p5);
-    // createClock(p5);
+    // drawRobot(p5);
   };
 };
 
